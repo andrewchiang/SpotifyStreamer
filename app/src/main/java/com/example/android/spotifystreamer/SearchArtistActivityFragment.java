@@ -1,6 +1,5 @@
 package com.example.android.spotifystreamer;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -36,7 +34,6 @@ public class SearchArtistActivityFragment extends Fragment {
 
     //public final String LOG_TAG = getClass().getSimpleName();
     private ArtistAdapter mArtistAdapter;
-    private InputMethodManager imm;
 
     public SearchArtistActivityFragment() {
 
@@ -72,9 +69,6 @@ public class SearchArtistActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search_artist, container, false);
 
-        imm = (InputMethodManager)getActivity().getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-
         // Initialize ArtistAdapter.
         mArtistAdapter = new ArtistAdapter(getActivity(), new ArrayList<SpotifyArtist>());
         // Find the list view.
@@ -107,8 +101,6 @@ public class SearchArtistActivityFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    // Hide the soft input window.
-                    imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
 
                     String artist_name = v.getText().toString().trim();
 
