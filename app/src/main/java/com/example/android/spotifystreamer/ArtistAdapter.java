@@ -37,7 +37,7 @@ public class ArtistAdapter extends ArrayAdapter<SpotifyArtist> {
         if(artist.getImage_url() != ""){
             Picasso.with(getContext())
                     .load(artist.getImage_url())
-                    .resizeDimen(56,56)
+                    .resizeDimen(R.dimen.thumbnail,R.dimen.thumbnail)
                     .centerCrop()
                     .into(imageView);
         }else {
