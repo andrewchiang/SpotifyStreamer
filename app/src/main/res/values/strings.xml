@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">SpotifyStreamer</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="search_artist_hint_edittext" translatable="false">Enter an Artist's name</string>
 </resources>
