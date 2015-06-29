@@ -37,7 +37,7 @@ public class TrackAdapter extends ArrayAdapter<SpotifyTrack> {
         if (track.getSmall_image_url() != "") {
             Picasso.with(getContext())
                     .load(track.getSmall_image_url())
-                    .resizeDimen(56,56)
+                    .resizeDimen(R.dimen.thumbnail_56, R.dimen.thumbnail_56)
                     .centerCrop()
                     .into(imageView);
         } else {
