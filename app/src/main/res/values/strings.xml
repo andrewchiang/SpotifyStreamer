@@ -6,7 +6,9 @@
     <string name="placeholder_track" translatable="false">The Track</string>
     <string name="placeholder_album" translatable="false">The Album</string>
     <string name="parcel_artists_result" translatable="false">ARTISTS_RESULT_KEY</string>
+    <string name="parcel_top_tracks_result" translatable="false">TOP_TRACKS_RESULT_KEY</string>
     <string name="error_failed_to_fetch_data" translatable="false">Failed to fetch data</string>
     <string name="error_no_artists_are_found" translatable="false">No artists are found</string>
-    <string name="title_activity_top_tracks">Top 10 Tracks</string>
+    <string name="error_no_top_tracks_not_found" translatable="false">No top 10 tracks are found</string>
+    <string name="title_activity_top_tracks" translatable="false">Top 10 Tracks</string>
 </resources>
