@@ -45,20 +45,32 @@ public class TopTracksActivityFragment extends Fragment {
         // Save the existing top tracks info for restoring later.
         outState.putParcelableArrayList(getString(R.string.parcel_top_tracks_result),
                 (ArrayList<SpotifyTrack>) mTrackAdapter.getTracks());
+
+        // Save the subtitle (artist name) of ActionBar.
+        ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+        if(actionBar != null){
+            outState.putString(getString(R.string.parcel_actionbar_subtitle),
+                    actionBar.getSubtitle().toString());
+        }
     }
 
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
-        // Restore top tracks info if available.
         if (savedInstanceState != null) {
+            // Restore top tracks info if available.
             List<SpotifyTrack> tracks = savedInstanceState.
                     getParcelableArrayList(getString(R.string.parcel_top_tracks_result));
 
             if (tracks != null) {
                 mTrackAdapter.setTracks(tracks);
             }
+
+            // Restore the subtitle of ActionBar.
+            String subtitle = savedInstanceState.getString(getString(R.string.parcel_actionbar_subtitle));
+            ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+            actionBar.setSubtitle(subtitle);
         }
     }
 
