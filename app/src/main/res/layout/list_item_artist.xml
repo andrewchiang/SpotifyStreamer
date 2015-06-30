@@ -9,15 +9,18 @@
 
     <ImageView
         android:id="@+id/artist_thumbnail_imageview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp" />
+        android:layout_width="@dimen/thumbnail"
+        android:layout_height="@dimen/thumbnail"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"/>
 
     <TextView
         android:id="@+id/artist_name_textview"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
+        android:textSize="14sp"
         android:layout_weight="1"
         android:text="@string/placeholder_artist" />
 

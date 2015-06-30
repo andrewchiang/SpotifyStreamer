@@ -9,26 +9,33 @@
 
     <ImageView
         android:id="@+id/track_thumbnail_imageview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"/>
+        android:layout_width="@dimen/thumbnail"
+        android:layout_height="@dimen/thumbnail"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"/>
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/track_name_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/placeholder_track" />
+            android:layout_marginLeft="16dp"
+            android:text="@string/placeholder_track"
+            android:textSize="14sp" />
+
         <TextView
             android:id="@+id/album_name_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/placeholder_album" />
+            android:layout_marginLeft="16dp"
+            android:text="@string/placeholder_album"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
