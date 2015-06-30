@@ -34,7 +34,7 @@ public class ArtistAdapter extends ArrayAdapter<SpotifyArtist> {
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.artist_thumbnail_imageview);
 
-        if(artist.getImage_url() != ""){
+        if(!artist.getImage_url().isEmpty()){
             Picasso.with(getContext())
                     .load(artist.getImage_url())
                     .resizeDimen(R.dimen.thumbnail,R.dimen.thumbnail)
