@@ -1,6 +1,6 @@
 package com.example.android.spotifystreamer;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,10 +30,14 @@ import retrofit.RetrofitError;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class SearchArtistActivityFragment extends Fragment {
+public class SearchArtistActivityFragment extends Fragment{
 
     //public final String LOG_TAG = getClass().getSimpleName();
     private ArtistAdapter mArtistAdapter;
+
+    public interface OnArtistSelectedListener{
+        void onArtistSelected(Bundle args);
+    }
 
     public SearchArtistActivityFragment() {
 
@@ -85,12 +89,21 @@ public class SearchArtistActivityFragment extends Fragment {
 
                 // Pass artist id and name to TopTracksActivity via Intent.
                 if (SpotifyArtist != null) {
-                    Intent topTrackIntent = new Intent(getActivity(), TopTracksActivity.class);
-                    topTrackIntent.putExtra(
-                            Intent.EXTRA_TEXT,
-                            new String[]{SpotifyArtist.getId(), SpotifyArtist.getName()}
-                    );
-                    startActivity(topTrackIntent);
+
+                    Activity activity = getActivity();
+                    if(activity instanceof OnArtistSelectedListener){
+                        Bundle args = new Bundle();
+                        args.putStringArray("artist", new String[]{SpotifyArtist.getId(), SpotifyArtist.getName()});
+
+                        ((OnArtistSelectedListener)activity).onArtistSelected(args);
+                    }
+
+//                    Intent topTrackIntent = new Intent(getActivity(), TopTracksActivity.class);
+//                    topTrackIntent.putExtra(
+//                            Intent.EXTRA_TEXT,
+//                            new String[]{SpotifyArtist.getId(), SpotifyArtist.getName()}
+//                    );
+//                    startActivity(topTrackIntent);
                 }
             }
         });

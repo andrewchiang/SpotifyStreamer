@@ -1,17 +1,38 @@
 package com.example.android.spotifystreamer;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class SearchArtistActivity extends ActionBarActivity {
+public class SearchArtistActivity extends ActionBarActivity
+        implements SearchArtistActivityFragment.OnArtistSelectedListener{
+
+    private static final String LOG_TAG = SearchArtistActivity.class.getSimpleName();
+    private static final String TRACKS_FRAGMENT_TAG = "TFTAG";
+
+    private boolean mTwoPane;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_artist);
+
+        if(findViewById(R.id.tracks_container) != null){
+            mTwoPane = true;
+
+            if(savedInstanceState == null){
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.tracks_container, new TopTracksActivityFragment(), TRACKS_FRAGMENT_TAG)
+                        .commit();
+            }
+        }else{
+            mTwoPane = false;
+
+        }
     }
 
 
@@ -35,5 +56,21 @@ public class SearchArtistActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onArtistSelected(Bundle args) {
+
+        if(mTwoPane){
+        TopTracksActivityFragment fragment = new TopTracksActivityFragment();
+        fragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.tracks_container, fragment)
+                .commit();
+        }else{
+            Intent intent = new Intent(this, TopTracksActivity.class);
+            intent.putExtra("artist", args.getStringArray("artist"));
+            startActivity(intent);
+        }
     }
 }

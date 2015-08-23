@@ -1,6 +1,5 @@
 package com.example.android.spotifystreamer;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -90,13 +89,11 @@ public class TopTracksActivityFragment extends Fragment {
 
         // Search top 10 tracks if restore is not available.
         if(savedInstanceState == null) {
-            // Retrieve info from intent passed by ArtistSearchActivityFragment.
-            Intent topTrackIntent = getActivity().getIntent();
-            // Make sure intent is available and has data (a String array) in it.
-            if (topTrackIntent != null && topTrackIntent.hasExtra(Intent.EXTRA_TEXT)) {
 
-                String artistId = topTrackIntent.getStringArrayExtra(Intent.EXTRA_TEXT)[0];
-                String artistName = topTrackIntent.getStringArrayExtra(Intent.EXTRA_TEXT)[1];
+            Bundle args = getArguments();
+            if(args != null){
+                String artistId = args.getStringArray("artist")[0];
+                String artistName = args.getStringArray("artist")[1];
 
                 // Call getSupportActionBar() instead of getActionBar
                 // when using AppCompat support library
@@ -111,6 +108,28 @@ public class TopTracksActivityFragment extends Fragment {
                 SearchTopTracksTask searchTopTracksTask = new SearchTopTracksTask();
                 searchTopTracksTask.execute(artistId);
             }
+
+//            // Retrieve info from intent passed by ArtistSearchActivityFragment.
+//            Intent topTrackIntent = getActivity().getIntent();
+//            // Make sure intent is available and has data (a String array) in it.
+//            if (topTrackIntent != null && topTrackIntent.hasExtra("artist")) {
+//
+//                String artistId = topTrackIntent.getStringArrayExtra("artist")[0];
+//                String artistName = topTrackIntent.getStringArrayExtra("artist")[1];
+//
+//                // Call getSupportActionBar() instead of getActionBar
+//                // when using AppCompat support library
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//                    ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+//                    if (actionBar != null) {
+//                        actionBar.setSubtitle(artistName);
+//                    }
+//                }
+//
+//                // Search the top 10 tracks based on the artist id.
+//                SearchTopTracksTask searchTopTracksTask = new SearchTopTracksTask();
+//                searchTopTracksTask.execute(artistId);
+//            }
         }
 
         return rootView;
