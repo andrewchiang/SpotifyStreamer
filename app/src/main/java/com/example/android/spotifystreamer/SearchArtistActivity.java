@@ -31,7 +31,6 @@ public class SearchArtistActivity extends ActionBarActivity
             }
         }else{
             mTwoPane = false;
-
         }
     }
 
@@ -62,11 +61,11 @@ public class SearchArtistActivity extends ActionBarActivity
     public void onArtistSelected(Bundle args) {
 
         if(mTwoPane){
-        TopTracksActivityFragment fragment = new TopTracksActivityFragment();
-        fragment.setArguments(args);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.tracks_container, fragment)
-                .commit();
+            TopTracksActivityFragment fragment = new TopTracksActivityFragment();
+            fragment.setArguments(args);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.tracks_container, fragment)
+                    .commit();
         }else{
             Intent intent = new Intent(this, TopTracksActivity.class);
             intent.putExtra("artist", args.getStringArray("artist"));
