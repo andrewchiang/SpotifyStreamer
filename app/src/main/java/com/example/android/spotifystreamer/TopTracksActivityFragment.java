@@ -1,17 +1,25 @@
 package com.example.android.spotifystreamer;
 
+import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.android.spotifystreamer.data.TopTracksContract;
+import com.example.android.spotifystreamer.music.MediaPlayerDialogFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +39,11 @@ import retrofit.RetrofitError;
  */
 public class TopTracksActivityFragment extends Fragment {
 
-    //private final String LOG_TAG = getClass().getSimpleName();
+    private static final String LOG_TAG = TopTracksActivityFragment.class.getSimpleName();
+    private boolean mIsLargeLayout;
+    private String mArtistName;
+    private String mARtistId;
+
     private TrackAdapter mTrackAdapter;
 
     public TopTracksActivityFragment() {
@@ -46,8 +58,8 @@ public class TopTracksActivityFragment extends Fragment {
                 (ArrayList<SpotifyTrack>) mTrackAdapter.getTracks());
 
         // Save the subtitle (artist name) of ActionBar.
-        ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
-        if(actionBar != null){
+        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
             outState.putString(getString(R.string.parcel_actionbar_subtitle),
                     actionBar.getSubtitle().toString());
         }
@@ -68,12 +80,10 @@ public class TopTracksActivityFragment extends Fragment {
 
             // Restore the subtitle of ActionBar.
             String subtitle = savedInstanceState.getString(getString(R.string.parcel_actionbar_subtitle));
-            ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+            ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
             actionBar.setSubtitle(subtitle);
         }
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,52 +97,54 @@ public class TopTracksActivityFragment extends Fragment {
         // Bind list view with TrackAdapter.
         listView.setAdapter(mTrackAdapter);
 
+        // The music player will be launched when the user choose a track.
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                long trackPosInDb = id + 1;
+                Log.d(LOG_TAG, "trackPosInDb: " + trackPosInDb);
+                showPlayerDialog(trackPosInDb);
+            }
+        });
+
         // Search top 10 tracks if restore is not available.
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
 
             Bundle args = getArguments();
-            if(args != null){
-                String artistId = args.getStringArray("artist")[0];
-                String artistName = args.getStringArray("artist")[1];
+            if (args != null) {
+                mARtistId = args.getStringArray("artist")[0];
+                mArtistName = args.getStringArray("artist")[1];
 
                 // Call getSupportActionBar() instead of getActionBar
                 // when using AppCompat support library
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
                     if (actionBar != null) {
-                        actionBar.setSubtitle(artistName);
+                        actionBar.setSubtitle(mArtistName);
                     }
                 }
 
                 // Search the top 10 tracks based on the artist id.
                 SearchTopTracksTask searchTopTracksTask = new SearchTopTracksTask();
-                searchTopTracksTask.execute(artistId);
+                searchTopTracksTask.execute(mARtistId);
             }
-
-//            // Retrieve info from intent passed by ArtistSearchActivityFragment.
-//            Intent topTrackIntent = getActivity().getIntent();
-//            // Make sure intent is available and has data (a String array) in it.
-//            if (topTrackIntent != null && topTrackIntent.hasExtra("artist")) {
-//
-//                String artistId = topTrackIntent.getStringArrayExtra("artist")[0];
-//                String artistName = topTrackIntent.getStringArrayExtra("artist")[1];
-//
-//                // Call getSupportActionBar() instead of getActionBar
-//                // when using AppCompat support library
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//                    ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
-//                    if (actionBar != null) {
-//                        actionBar.setSubtitle(artistName);
-//                    }
-//                }
-//
-//                // Search the top 10 tracks based on the artist id.
-//                SearchTopTracksTask searchTopTracksTask = new SearchTopTracksTask();
-//                searchTopTracksTask.execute(artistId);
-//            }
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        /**
+         * Set this variable to true or false based on the screen size.
+         * large_layout is defined in two places:
+         *     - res/values/bools.xml
+         *     - res/values-large/bools.xml
+         * This variable will be used in showPlayerDialog().
+         */
+        mIsLargeLayout = getResources().getBoolean(R.bool.large_layout);
     }
 
     public class SearchTopTracksTask extends AsyncTask<String, Void, List<SpotifyTrack>> {
@@ -141,7 +153,7 @@ public class TopTracksActivityFragment extends Fragment {
 
         @Override
         protected List<SpotifyTrack> doInBackground(String... params) {
-            List<SpotifyTrack> SpotifyTracks = null;
+            List<SpotifyTrack> spotifyTracks = null;
             Tracks tracks = null;
 
             SpotifyService spotifyService = new SpotifyApi().getService();
@@ -160,7 +172,7 @@ public class TopTracksActivityFragment extends Fragment {
             // Get top tracks from spotify.
             if (tracks != null) {
                 if (getActivity() != null && !tracks.tracks.isEmpty()) {
-                    SpotifyTracks = new ArrayList<>();
+                    spotifyTracks = new ArrayList<>();
 
                     for (Track track : tracks.tracks) {
                         String small_image_url = ""; // image for track list item.
@@ -176,24 +188,36 @@ public class TopTracksActivityFragment extends Fragment {
                             large_image_url = track.album.images.get(0).url;
                         }
 
-                        SpotifyTracks.add(new SpotifyTrack(track.name, track.album.name, small_image_url, large_image_url, track.preview_url));
+                        spotifyTracks.add(
+                                new SpotifyTrack(
+                                    mArtistName,
+                                    track.name,
+                                    track.album.name,
+                                    small_image_url,
+                                    large_image_url,
+                                    track.preview_url
+                                )
+                        );
                     }
+
+                    // Inserts all tracks getting from Spotify endpoint into the database.
+                    insertTracksToDb(spotifyTracks);
                 }
             }
 
-            return SpotifyTracks;
+            return spotifyTracks;
         }
 
         @Override
-        protected void onPostExecute(List<SpotifyTrack> SpotifyTracks) {
+        protected void onPostExecute(List<SpotifyTrack> spotifyTracks) {
 
-            if(getActivity() != null) {
+            if (getActivity() != null) {
 
                 mTrackAdapter.clear();
 
                 // Update top tracks.
-                if (getActivity() != null && SpotifyTracks != null) {
-                    mTrackAdapter.setTracks(SpotifyTracks);
+                if (getActivity() != null && spotifyTracks != null) {
+                    mTrackAdapter.setTracks(spotifyTracks);
                 }
                 // Error happened during searching top tracks.
                 else if (failedToFetchData) {
@@ -207,5 +231,72 @@ public class TopTracksActivityFragment extends Fragment {
                 }
             }
         }
+
+        private void insertTracksToDb(List<SpotifyTrack> tracks) {
+
+            int rowsDeleted = Utils.deleteTracksFromDb(
+                    getActivity(),
+                    TopTracksContract.TopTracksEntry.CONTENT_URI,
+                    TopTracksContract.TopTracksEntry.TABLE_NAME
+            );
+
+            Log.d(LOG_TAG, "Total has " + rowsDeleted + " records deleted from table.");
+
+            int count = tracks.size();
+
+            if (count > 0) {
+
+                ContentValues[] values = new ContentValues[count];
+
+                for (int i = 0; i < count; ++i) {
+                    ContentValues value = new ContentValues();
+                    value.put(TopTracksContract.TopTracksEntry.COLUMN_ARTIST, tracks.get(i).getArtist_name());
+                    value.put(TopTracksContract.TopTracksEntry.COLUMN_ALBUM, tracks.get(i).getAlbum_name());
+                    value.put(TopTracksContract.TopTracksEntry.COLUMN_TRACK, tracks.get(i).getTrack_name());
+                    value.put(TopTracksContract.TopTracksEntry.COLUMN_SMALL_IMAGE, tracks.get(i).getSmall_image_url());
+                    value.put(TopTracksContract.TopTracksEntry.COLUMN_LARGE_IMAGE, tracks.get(i).getLarge_image_url());
+                    value.put(TopTracksContract.TopTracksEntry.COLUMN_PREVIEW_URL, tracks.get(i).getPreview_url());
+                    values[i] = value;
+                }
+
+                int numInserted = getActivity().getContentResolver().bulkInsert(
+                        TopTracksContract.TopTracksEntry.CONTENT_URI,
+                        values
+                );
+
+                Log.d(LOG_TAG, "Total has " + numInserted + " records inserted into table");
+            }
+        }
     }
+
+    /**
+     * This function is used for display the music player.
+     * Player will be displayed as full screen or embedded fragment based on the screen size.
+     */
+    private void showPlayerDialog(long trackId) {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        MediaPlayerDialogFragment dialogFragment = new MediaPlayerDialogFragment();
+
+        Bundle args = new Bundle();
+        args.putLong("trackId", trackId);
+        dialogFragment.setArguments(args);
+
+        if (mIsLargeLayout) {
+            // The device is using a large layout, so show the fragment as a dialog
+            dialogFragment.show(fm, "player");
+        } else {
+            // The device is smaller, so show the fragment fullscreen
+            FragmentTransaction transaction = fm.beginTransaction();
+
+            // For a little polish, specify a transition animation
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+            // To make it fullscreen, use the 'content' root view as the container
+            // for the fragment, which is always the root view for the activity
+            transaction.add(android.R.id.content, dialogFragment)
+                    .addToBackStack(null).commit();
+        }
+    }
+
+
 }
