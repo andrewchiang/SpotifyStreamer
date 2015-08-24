@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by achiang on 6/29/15.
  */
-public class SpotifyTrack implements Parcelable{
+public class SpotifyTrack implements Parcelable {
     private String artist_name;
     private String track_name;
     private String album_name;
@@ -24,7 +24,9 @@ public class SpotifyTrack implements Parcelable{
         this.preview_url = preview_url;
     }
 
-    public String getArtist_name() { return artist_name;}
+    public String getArtist_name() {
+        return artist_name;
+    }
 
     public String getTrack_name() {
         return track_name;
@@ -74,7 +76,7 @@ public class SpotifyTrack implements Parcelable{
                 }
             };
 
-    private SpotifyTrack(Parcel parcel){
+    private SpotifyTrack(Parcel parcel) {
         artist_name = parcel.readString();
         track_name = parcel.readString();
         album_name = parcel.readString();
