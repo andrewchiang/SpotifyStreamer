@@ -24,11 +24,11 @@ public class SearchArtistActivity extends ActionBarActivity
         if(findViewById(R.id.tracks_container) != null){
             mTwoPane = true;
 
-            if(savedInstanceState == null){
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.tracks_container, new TopTracksActivityFragment(), TRACKS_FRAGMENT_TAG)
-                        .commit();
-            }
+//            if(savedInstanceState == null){
+//                getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.tracks_container, new TopTracksActivityFragment(), TRACKS_FRAGMENT_TAG)
+//                        .commit();
+//            }
         }else{
             mTwoPane = false;
         }
