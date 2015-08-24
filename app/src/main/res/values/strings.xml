@@ -12,4 +12,5 @@
     <string name="error_no_artists_are_found" translatable="false">No artists are found</string>
     <string name="error_no_top_tracks_not_found" translatable="false">No top 10 tracks are found</string>
     <string name="title_activity_top_tracks" translatable="false">Top 10 Tracks</string>
+    <string name="error_track_is_not_available" translatable="false">The selected track is not available</string>
 </resources>
