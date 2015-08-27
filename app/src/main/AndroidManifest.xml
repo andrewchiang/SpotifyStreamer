@@ -32,6 +32,7 @@
         <provider
             android:name=".data.TopTracksProvider"
             android:authorities="com.example.android.spotifystreamer"></provider>
+        <service android:name=".service.MusicService"></service>
     </application>
 
 </manifest>
