@@ -1,5 +1,6 @@
 package com.example.android.spotifystreamer.music;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.example.android.spotifystreamer.R;
 import com.example.android.spotifystreamer.Utils;
 import com.example.android.spotifystreamer.data.TopTracksContract;
+import com.example.android.spotifystreamer.service.MusicService;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -59,6 +61,15 @@ public class MediaPlayerDialogFragment extends DialogFragment {
             PlayerInfo playerInfo = savedInstanceState.getParcelable(PLAYER_TAG);
             updatePlayer(playerInfo);
         }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        Log.d(LOG_TAG, "onActivityCreated");
+        Intent serviceIntent = new Intent(getActivity(), MusicService.class);
+        getActivity().startService(serviceIntent);
     }
 
     @Nullable
