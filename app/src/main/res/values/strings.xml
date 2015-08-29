@@ -5,12 +5,32 @@
     <string name="placeholder_artist" translatable="false">The Artist</string>
     <string name="placeholder_track" translatable="false">The Track</string>
     <string name="placeholder_album" translatable="false">The Album</string>
-    <string name="parcel_artists_result" translatable="false">ARTISTS_RESULT_KEY</string>
-    <string name="parcel_top_tracks_result" translatable="false">TOP_TRACKS_RESULT_KEY</string>
-    <string name="parcel_actionbar_subtitle" translatable="false">ACTIONBAR_SUBTITLE_KEY</string>
+
+
+    <!-- Title of activities -->
+    <string name="title_activity_top_tracks" translatable="false">Top 10 Tracks</string>
+    <string name="title_activity_player" translatable="false">Now Playing</string>
+
+    <!-- Error code -->
     <string name="error_failed_to_fetch_data" translatable="false">Failed to fetch data</string>
     <string name="error_no_artists_are_found" translatable="false">No artists are found</string>
     <string name="error_no_top_tracks_not_found" translatable="false">No top 10 tracks are found</string>
-    <string name="title_activity_top_tracks" translatable="false">Top 10 Tracks</string>
     <string name="error_track_is_not_available" translatable="false">The selected track is not available</string>
+    <string name="error_invalid_artist_id_or_name" translatble="false">Sorry! Invalid artist id or name</string>
+
+    <!-- Keys of bundle, intent, and parcel -->
+    <string name="PARCEL_KEY_ARTISTS_RESULT" translatable="false">PARCEL_KEY_ARTISTS_RESULT</string>
+    <string name="PARCEL_KEY_TOP_TRACKS_RESULT" translatable="false">PARCEL_KEY_TOP_TRACKS_RESULT</string>
+    <string name="PARCEL_KEY_ACTION_BAR_SUBTITLE" translatable="false">PARCEL_KEY_ACTION_BAR_SUBTITLE</string>
+    <string name="PARCEL_KEY_PLAYER_INFO" tranclatable="false">PARCEL_KEY_PLAYER_INFO</string>
+
+    <string name="BUNDLE_KEY_ARTIST_ID_AND_NAME" translatable="false">BUNDLE_KEY_ARTIST_ID_AND_NAME</string>
+    <string name="INTENT_KEY_ARTIST_ID_AND_NAME" translatable="false">INTENT_KEY_ARTIST_ID_AND_NAME</string>
+
+    <string name="BUNDLE_KEY_PLAYER_TRACK_POS" translatable="false">BUNDLE_KEY_PLAYER_TRACK_POS</string>
+    <string name="INTENT_KEY_PLAYER_TRACK_POS" translatable="false">INTENT_KEY_PLAYER_TRACK_POS</string>
+
+    <!-- Tags are used for dynamically adding a fragment to the container -->
+    <string name="TAG_TOP_TRACKS_FRAGMENT" translatable="false">TAG_TOP_TRACKS_FRAGMENT</string>
+    <string name="TAG_PLAYER" translatable="false">TAG_PLAYER</string>
 </resources>
