@@ -26,21 +26,20 @@ import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
 import retrofit.RetrofitError;
 
+public class SearchArtistActivityFragment extends Fragment {
 
-/**
- * A placeholder fragment containing a simple view.
- */
-public class SearchArtistActivityFragment extends Fragment{
-
-    //public final String LOG_TAG = getClass().getSimpleName();
+    public static final String LOG_TAG = SearchArtistActivityFragment.class.getSimpleName();
     private ArtistAdapter mArtistAdapter;
 
-    public interface OnArtistSelectedListener{
+
+    /**
+     * SearchArtistActivity must implement this interface in order to handle the event.
+     */
+    public interface OnArtistSelectedListener {
         void onArtistSelected(Bundle args);
     }
 
     public SearchArtistActivityFragment() {
-
     }
 
     @Override
@@ -49,7 +48,7 @@ public class SearchArtistActivityFragment extends Fragment{
 
         // Save the existing artists info for restoring later.
         outState.putParcelableArrayList(
-                getString(R.string.parcel_artists_result),
+                getString(R.string.PARCEL_KEY_ARTISTS_RESULT),
                 (ArrayList<SpotifyArtist>) mArtistAdapter.getArtists());
     }
 
@@ -60,7 +59,7 @@ public class SearchArtistActivityFragment extends Fragment{
         // Restore artists info if available.
         if (savedInstanceState != null) {
             List<SpotifyArtist> list = savedInstanceState.getParcelableArrayList(
-                    getString(R.string.parcel_artists_result));
+                    getString(R.string.PARCEL_KEY_ARTISTS_RESULT));
 
             if (list != null) {
                 mArtistAdapter.setArtists(list);
@@ -75,8 +74,10 @@ public class SearchArtistActivityFragment extends Fragment{
 
         // Initialize ArtistAdapter.
         mArtistAdapter = new ArtistAdapter(getActivity(), new ArrayList<SpotifyArtist>());
+
         // Find the list view.
         ListView listView = (ListView) rootView.findViewById(R.id.artists_listview);
+
         // Bind list view with ArtistAdapter.
         listView.setAdapter(mArtistAdapter);
 
@@ -84,26 +85,23 @@ public class SearchArtistActivityFragment extends Fragment{
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 // Retrieve the selected artist.
-                SpotifyArtist SpotifyArtist = (SpotifyArtist) parent.getItemAtPosition(position);
+                SpotifyArtist spotifyArtist = (SpotifyArtist) parent.getItemAtPosition(position);
 
                 // Pass artist id and name to TopTracksActivity via Intent.
-                if (SpotifyArtist != null) {
+                if (spotifyArtist != null) {
 
                     Activity activity = getActivity();
-                    if(activity instanceof OnArtistSelectedListener){
+
+                    if (activity instanceof OnArtistSelectedListener) {
                         Bundle args = new Bundle();
-                        args.putStringArray("artist", new String[]{SpotifyArtist.getId(), SpotifyArtist.getName()});
+                        args.putStringArray(getString(R.string.BUNDLE_KEY_ARTIST_ID_AND_NAME),
+                                new String[]{spotifyArtist.getId(), spotifyArtist.getName()}
+                        );
 
-                        ((OnArtistSelectedListener)activity).onArtistSelected(args);
+                        ((OnArtistSelectedListener) activity).onArtistSelected(args);
                     }
-
-//                    Intent topTrackIntent = new Intent(getActivity(), TopTracksActivity.class);
-//                    topTrackIntent.putExtra(
-//                            Intent.EXTRA_TEXT,
-//                            new String[]{SpotifyArtist.getId(), SpotifyArtist.getName()}
-//                    );
-//                    startActivity(topTrackIntent);
                 }
             }
         });
@@ -146,7 +144,7 @@ public class SearchArtistActivityFragment extends Fragment{
 
         @Override
         protected List<SpotifyArtist> doInBackground(String... params) {
-            List<SpotifyArtist> SpotifyArtists = null;
+            List<SpotifyArtist> spotifyArtists = null;
             ArtistsPager artistsPager = null;
 
             SpotifyService spotifyService = new SpotifyApi().getService();
@@ -161,7 +159,7 @@ public class SearchArtistActivityFragment extends Fragment{
             // Get artists from spotify.
             if (artistsPager != null) {
                 if (getActivity() != null && artistsPager.artists.total != 0) {
-                    SpotifyArtists = new ArrayList<>();
+                    spotifyArtists = new ArrayList<>();
                     for (Artist artist : artistsPager.artists.items) {
                         String name = artist.name;
                         String id = artist.id;
@@ -173,28 +171,28 @@ public class SearchArtistActivityFragment extends Fragment{
                             image_url = Utils.findImageForListItem(artist.images);
                         }
 
-                        SpotifyArtists.add(new SpotifyArtist(id, name, image_url));
+                        spotifyArtists.add(new SpotifyArtist(id, name, image_url));
                     }
                 }
             }
 
-            return SpotifyArtists;
+            return spotifyArtists;
         }
 
         @Override
-        protected void onPostExecute(List<SpotifyArtist> SpotifyArtists) {
+        protected void onPostExecute(List<SpotifyArtist> spotifyArtists) {
 
-            if(getActivity() != null) {
+            if (getActivity() != null) {
 
                 mArtistAdapter.clear();
 
                 // Update artists.
-                if (SpotifyArtists != null) {
-                    mArtistAdapter.setArtists(SpotifyArtists);
+                if (spotifyArtists != null) {
+                    mArtistAdapter.setArtists(spotifyArtists);
                 }
                 // Error happened during searching artists.
                 else if (failedToFetchData) {
-                    Utils.displayToast(getActivity(),R.string.error_failed_to_fetch_data,
+                    Utils.displayToast(getActivity(), R.string.error_failed_to_fetch_data,
                             Toast.LENGTH_SHORT, Gravity.CENTER);
                 }
                 // Artists are not available.

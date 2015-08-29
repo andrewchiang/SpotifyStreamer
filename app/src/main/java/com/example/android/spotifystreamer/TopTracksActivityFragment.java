@@ -1,12 +1,12 @@
 package com.example.android.spotifystreamer;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -19,7 +19,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.android.spotifystreamer.data.TopTracksContract;
-import com.example.android.spotifystreamer.music.MediaPlayerDialogFragment;
+import com.example.android.spotifystreamer.player.PlayerActivity;
+import com.example.android.spotifystreamer.player.PlayerDialogFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +43,7 @@ public class TopTracksActivityFragment extends Fragment {
     private static final String LOG_TAG = TopTracksActivityFragment.class.getSimpleName();
     private boolean mIsLargeLayout;
     private String mArtistName;
-    private String mARtistId;
+    private String mArtistId;
 
     private TrackAdapter mTrackAdapter;
 
@@ -54,13 +55,13 @@ public class TopTracksActivityFragment extends Fragment {
         super.onSaveInstanceState(outState);
 
         // Save the existing top tracks info for restoring later.
-        outState.putParcelableArrayList(getString(R.string.parcel_top_tracks_result),
+        outState.putParcelableArrayList(getString(R.string.PARCEL_KEY_TOP_TRACKS_RESULT),
                 (ArrayList<SpotifyTrack>) mTrackAdapter.getTracks());
 
         // Save the subtitle (artist name) of ActionBar.
         ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
-            outState.putString(getString(R.string.parcel_actionbar_subtitle),
+            outState.putString(getString(R.string.PARCEL_KEY_ACTION_BAR_SUBTITLE),
                     actionBar.getSubtitle().toString());
         }
     }
@@ -72,14 +73,14 @@ public class TopTracksActivityFragment extends Fragment {
         if (savedInstanceState != null) {
             // Restore top tracks info if available.
             List<SpotifyTrack> tracks = savedInstanceState.
-                    getParcelableArrayList(getString(R.string.parcel_top_tracks_result));
+                    getParcelableArrayList(getString(R.string.PARCEL_KEY_TOP_TRACKS_RESULT));
 
             if (tracks != null) {
                 mTrackAdapter.setTracks(tracks);
             }
 
             // Restore the subtitle of ActionBar.
-            String subtitle = savedInstanceState.getString(getString(R.string.parcel_actionbar_subtitle));
+            String subtitle = savedInstanceState.getString(getString(R.string.PARCEL_KEY_ACTION_BAR_SUBTITLE));
             ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
             actionBar.setSubtitle(subtitle);
         }
@@ -112,21 +113,33 @@ public class TopTracksActivityFragment extends Fragment {
 
             Bundle args = getArguments();
             if (args != null) {
-                mARtistId = args.getStringArray("artist")[0];
-                mArtistName = args.getStringArray("artist")[1];
+                try {
+                    mArtistId = args.getStringArray(getString(R.string.BUNDLE_KEY_ARTIST_ID_AND_NAME))[0];
+                    mArtistName = args.getStringArray(getString(R.string.BUNDLE_KEY_ARTIST_ID_AND_NAME))[1];
 
-                // Call getSupportActionBar() instead of getActionBar
-                // when using AppCompat support library
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
-                    if (actionBar != null) {
-                        actionBar.setSubtitle(mArtistName);
+                    // Call getSupportActionBar() instead of getActionBar
+                    // when using AppCompat support library
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
+                        if (actionBar != null) {
+                            actionBar.setSubtitle(mArtistName);
+                        }
                     }
-                }
 
-                // Search the top 10 tracks based on the artist id.
-                SearchTopTracksTask searchTopTracksTask = new SearchTopTracksTask();
-                searchTopTracksTask.execute(mARtistId);
+                    // Search the top 10 tracks based on the artist id.
+                    SearchTopTracksTask searchTopTracksTask = new SearchTopTracksTask();
+                    searchTopTracksTask.execute(mArtistId);
+                } catch (NullPointerException e) {
+
+                    // Error caused by trying to get artist id and name.
+                    Log.d(LOG_TAG, "onCreateView: " + e.getMessage());
+
+                    Utils.displayToast(getActivity(),
+                            R.string.error_invalid_artist_id_or_name,
+                            Toast.LENGTH_SHORT,
+                            Gravity.CENTER
+                    );
+                }
             }
         }
 
@@ -190,12 +203,12 @@ public class TopTracksActivityFragment extends Fragment {
 
                         spotifyTracks.add(
                                 new SpotifyTrack(
-                                    mArtistName,
-                                    track.name,
-                                    track.album.name,
-                                    small_image_url,
-                                    large_image_url,
-                                    track.preview_url
+                                        mArtistName,
+                                        track.name,
+                                        track.album.name,
+                                        small_image_url,
+                                        large_image_url,
+                                        track.preview_url
                                 )
                         );
                     }
@@ -274,27 +287,23 @@ public class TopTracksActivityFragment extends Fragment {
      * Player will be displayed as full screen or embedded fragment based on the screen size.
      */
     private void showPlayerDialog(long trackId) {
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        MediaPlayerDialogFragment dialogFragment = new MediaPlayerDialogFragment();
 
         Bundle args = new Bundle();
-        args.putLong("trackId", trackId);
-        dialogFragment.setArguments(args);
+        args.putLong(getString(R.string.BUNDLE_KEY_PLAYER_TRACK_POS), trackId);
 
         if (mIsLargeLayout) {
             // The device is using a large layout, so show the fragment as a dialog
-            dialogFragment.show(fm, "player");
+
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            PlayerDialogFragment dialogFragment = new PlayerDialogFragment();
+            dialogFragment.setArguments(args);
+            dialogFragment.show(fm, getString(R.string.TAG_PLAYER));
         } else {
             // The device is smaller, so show the fragment fullscreen
-            FragmentTransaction transaction = fm.beginTransaction();
 
-            // For a little polish, specify a transition animation
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-
-            // To make it fullscreen, use the 'content' root view as the container
-            // for the fragment, which is always the root view for the activity
-            transaction.add(android.R.id.content, dialogFragment)
-                    .addToBackStack(null).commit();
+            Intent playerIntent = new Intent(getActivity(), PlayerActivity.class);
+            playerIntent.putExtra(getString(R.string.INTENT_KEY_PLAYER_TRACK_POS), args);
+            startActivity(playerIntent);
         }
     }
 

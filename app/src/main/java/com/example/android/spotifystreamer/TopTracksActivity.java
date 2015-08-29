@@ -13,14 +13,16 @@ public class TopTracksActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top_tracks);
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
 
-            Bundle args = new Bundle();
-            args.putStringArray("artist", getIntent().getStringArrayExtra("artist"));
+            // Gets the bundle passing by the SearchArtistActivity.
+            Bundle args = getIntent().getBundleExtra(getString(R.string.INTENT_KEY_ARTIST_ID_AND_NAME));
+
+            // Adds the top tracks fragment dynamically.
             TopTracksActivityFragment fragment = new TopTracksActivityFragment();
             fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.tracks_container, fragment)
+                    .add(R.id.tracks_container, fragment, getString(R.string.TAG_TOP_TRACKS_FRAGMENT))
                     .commit();
         }
     }
