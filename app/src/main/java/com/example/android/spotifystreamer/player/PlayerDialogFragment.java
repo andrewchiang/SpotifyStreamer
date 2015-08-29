@@ -1,4 +1,4 @@
-package com.example.android.spotifystreamer.music;
+package com.example.android.spotifystreamer.player;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,9 +26,9 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by achiang on 8/24/15.
  */
-public class MediaPlayerDialogFragment extends DialogFragment {
+public class PlayerDialogFragment extends DialogFragment {
 
-    private static final String LOG_TAG = MediaPlayerDialogFragment.class.getSimpleName();
+    private static final String LOG_TAG = PlayerDialogFragment.class.getSimpleName();
     private static final String PLAYER_TAG = "PLAYER_TAG";
     private static PlayerInfo mPlayerInfoForRestore;
 
