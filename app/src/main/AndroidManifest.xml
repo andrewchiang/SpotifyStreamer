@@ -24,10 +24,19 @@
         <activity
             android:name=".TopTracksActivity"
             android:label="@string/title_activity_top_tracks"
+            android:launchMode="singleTop"
             android:parentActivityName=".SearchArtistActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.spotifystreamer.SearchArtistActivity" />
+        </activity>
+        <activity
+            android:name=".player.PlayerActivity"
+            android:label="@string/title_activity_player"
+            android:parentActivityName=".TopTracksActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.spotifystreamer.TopTracksActivity" />
         </activity>
 
         <provider
