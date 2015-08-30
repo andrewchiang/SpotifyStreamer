@@ -30,7 +30,7 @@ public class PlayerActivity extends ActionBarActivity {
                     .add(R.id.player_container,
                             playerDialogFragment,
                             getString(R.string.TAG_PLAYER))
-                    .addToBackStack(null)
+                    //.addToBackStack(null)
                     .commit();
         }
     }
