@@ -3,6 +3,7 @@
     package="com.example.android.spotifystreamer">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- To prevent the system from interfering the playback even if the phone is idle. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
