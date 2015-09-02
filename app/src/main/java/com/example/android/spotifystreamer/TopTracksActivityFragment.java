@@ -102,7 +102,7 @@ public class TopTracksActivityFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                long trackPosInDb = id + 1;
+                long trackPosInDb = id;
                 Log.d(LOG_TAG, "trackPosInDb: " + trackPosInDb);
                 showPlayerDialog(trackPosInDb);
             }
