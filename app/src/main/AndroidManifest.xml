@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- To prevent the system from interfering the playback even if the phone is idle. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- This allows us to use lock screen notification to control media -->
+    <uses-permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
     <application
         android:allowBackup="true"
