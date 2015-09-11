@@ -9,8 +9,9 @@
 
     <TextView
         android:id="@+id/artist_name_textview"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:layout_gravity="center"
         android:text="@string/placeholder_artist"
         android:textAppearance="?android:textAppearanceMedium"
@@ -19,9 +20,10 @@
 
     <TextView
         android:id="@+id/album_name_textview"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
         android:text="@string/placeholder_album"
         android:textAppearance="?android:textAppearanceMedium"
         android:textSize="16sp"
@@ -38,9 +40,10 @@
 
     <TextView
         android:id="@+id/track_name_textview"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
         android:text="@string/placeholder_track"
         android:textAppearance="?android:textAppearanceMedium"
         android:textSize="16sp"
@@ -95,8 +98,8 @@
             android:id="@+id/play_pause_imagebutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:src="@android:drawable/ic_media_play" />
 
         <ImageButton
