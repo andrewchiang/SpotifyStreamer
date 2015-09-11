@@ -7,10 +7,13 @@
     <string name="placeholder_artist" translatable="false">The Artist</string>
     <string name="placeholder_track" translatable="false">The Track</string>
     <string name="placeholder_album" translatable="false">The Album</string>
+    <string name="placeholder_elapsed_time" translatable="false">0:00</string>
+    <string name="placeholder_duration" translatable="false">0:30</string>
 
-    <!-- Title of activities -->
+    <!-- Title -->
     <string name="title_activity_top_tracks" translatable="false">Top 10 Tracks</string>
     <string name="title_activity_player" translatable="false">Now Playing</string>
+    <string name="title_notification" translatable="false">Now Playing</string>
 
     <!-- Error code -->
     <string name="error_failed_to_fetch_data" translatable="false">Failed to fetch data</string>
@@ -34,8 +37,11 @@
 
     <string name="BUNDLE_KEY_PLAYER_TRACK_POS" translatable="false">BUNDLE_KEY_PLAYER_TRACK_POS</string>
     <string name="INTENT_KEY_PLAYER_TRACK_POS" translatable="false">INTENT_KEY_PLAYER_TRACK_POS</string>
-
+    <string name="INTENT_KEY_PLAYER_TRACK_PREVIEW_URL" translatalbe="false">INTENT_KEY_PLAYER_TRACK_PREVIEW_URL</string>
     <string name="INTENT_KEY_SERVICE_PREVIEW_URL" translatable="false">INTENT_KEY_SERVICE_PREVIEW_URL</string>
+    <string name="INTENT_KEY_PLAYER_TRACK_ELAPSED" translatable="false">INTENT_KEY_PLAYER_TRACK_ELAPSED</string>
+    <string name="INTENT_KEY_PLAYER_TRACK_DRUATION" translatable="false">INTENT_KEY_PLAYER_TRACK_DRUATION</string>
+    <string name="INTENT_KEY_PLAYER_TRACK_SEEK_TO" translatable="false">INTENT_KEY_PLAYER_TRACK_SEEK_TO</string>
 
     <!-- Tags are used for dynamically adding a fragment to the container -->
     <string name="TAG_TOP_TRACKS_FRAGMENT" translatable="false">TAG_TOP_TRACKS_FRAGMENT</string>
