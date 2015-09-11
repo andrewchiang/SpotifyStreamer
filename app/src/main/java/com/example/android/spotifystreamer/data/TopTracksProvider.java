@@ -143,27 +143,27 @@ public class TopTracksProvider extends ContentProvider {
         final SQLiteDatabase db = mDBHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
 
-        switch(match){
+        switch (match) {
             case TRACKS:
                 db.beginTransaction();
                 int retCount = 0;
 
-                try{
+                try {
 
-                    for(ContentValues value : values){
+                    for (ContentValues value : values) {
                         long _id = db.insert(
                                 TopTracksContract.TopTracksEntry.TABLE_NAME,
                                 null,
                                 value
                         );
 
-                        if(_id != -1){
+                        if (_id != -1) {
                             retCount++;
                         }
                     }
 
                     db.setTransactionSuccessful();
-                }finally {
+                } finally {
                     db.endTransaction();
                 }
 

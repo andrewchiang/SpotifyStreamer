@@ -20,7 +20,7 @@ public class TopTracksDBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "tracks.db";
 
-    public TopTracksDBHelper(Context context){
+    public TopTracksDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

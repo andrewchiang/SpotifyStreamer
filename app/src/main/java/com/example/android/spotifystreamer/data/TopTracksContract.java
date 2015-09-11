@@ -27,7 +27,6 @@ public class TopTracksContract {
     public static final String PATH_TRACKS = TopTracksEntry.TABLE_NAME;
 
 
-
     /* Inner class that defines the contents of the top tracks table */
     public static final class TopTracksEntry implements BaseColumns {
 
@@ -40,7 +39,6 @@ public class TopTracksContract {
 
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_TRACKS;
-
 
 
         /* The following 7 constants are defined for columns of table. */
@@ -64,7 +62,7 @@ public class TopTracksContract {
 
         /* The following methods are defined for content provider querying. */
 
-        public static Uri buildTrackUri(long id){
+        public static Uri buildTrackUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
     }
