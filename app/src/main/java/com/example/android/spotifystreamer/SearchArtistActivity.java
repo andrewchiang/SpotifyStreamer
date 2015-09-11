@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 
 public class SearchArtistActivity extends ActionBarActivity
-        implements SearchArtistActivityFragment.OnArtistSelectedListener{
+        implements SearchArtistActivityFragment.OnArtistSelectedListener {
 
     private static final String LOG_TAG = SearchArtistActivity.class.getSimpleName();
     private boolean mTwoPane;
@@ -19,9 +19,9 @@ public class SearchArtistActivity extends ActionBarActivity
         setContentView(R.layout.activity_search_artist);
 
         // Checks if the layout is single pane or two pane.
-        if(findViewById(R.id.tracks_container) != null){
+        if (findViewById(R.id.tracks_container) != null) {
             mTwoPane = true;
-        }else{
+        } else {
             mTwoPane = false;
         }
     }
@@ -50,19 +50,20 @@ public class SearchArtistActivity extends ActionBarActivity
 
     /**
      * This activity implements the interface declaring in the SearchArtistActivityFragment.
+     *
      * @param args: This bundle contains an artist id and artist name.
      */
     @Override
     public void onArtistSelected(Bundle args) {
 
-        if(mTwoPane){
+        if (mTwoPane) {
             // Adds the top tracks fragment dynamically if this layout is two pane.
             TopTracksActivityFragment fragment = new TopTracksActivityFragment();
             fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.tracks_container, fragment, getString(R.string.TAG_TOP_TRACKS_FRAGMENT))
                     .commit();
-        }else{
+        } else {
             // Creates a TopTracksActivity and passes the data to it.
             Intent intent = new Intent(this, TopTracksActivity.class);
             intent.putExtra(getString(R.string.INTENT_KEY_ARTIST_ID_AND_NAME), args);

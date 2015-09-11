@@ -19,7 +19,7 @@ import java.util.List;
 public class ArtistAdapter extends ArrayAdapter<SpotifyArtist> {
     private List<SpotifyArtist> mArtists;
 
-    public ArtistAdapter(Context context, ArrayList<SpotifyArtist> artists){
+    public ArtistAdapter(Context context, ArrayList<SpotifyArtist> artists) {
         super(context, 0, artists);
         mArtists = artists;
     }
@@ -28,19 +28,19 @@ public class ArtistAdapter extends ArrayAdapter<SpotifyArtist> {
     public View getView(int position, View convertView, ViewGroup parent) {
         SpotifyArtist artist = getItem(position);
 
-        if(convertView == null){
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_artist, parent, false);
         }
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.artist_thumbnail_imageview);
 
-        if(!artist.getImage_url().isEmpty()){
+        if (!artist.getImage_url().isEmpty()) {
             Picasso.with(getContext())
                     .load(artist.getImage_url())
-                    .resizeDimen(R.dimen.thumbnail,R.dimen.thumbnail)
+                    .resizeDimen(R.dimen.thumbnail, R.dimen.thumbnail)
                     .centerCrop()
                     .into(imageView);
-        }else {
+        } else {
             imageView.setImageResource(R.mipmap.ic_launcher);
         }
 
@@ -50,11 +50,11 @@ public class ArtistAdapter extends ArrayAdapter<SpotifyArtist> {
         return convertView;
     }
 
-    public List<SpotifyArtist> getArtists(){
+    public List<SpotifyArtist> getArtists() {
         return mArtists;
     }
 
-    public void setArtists(List<SpotifyArtist> artists){
+    public void setArtists(List<SpotifyArtist> artists) {
         addAll(artists);
     }
 }
