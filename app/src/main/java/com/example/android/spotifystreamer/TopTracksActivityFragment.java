@@ -1,5 +1,6 @@
 package com.example.android.spotifystreamer;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -9,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,9 +102,7 @@ public class TopTracksActivityFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                long trackPosInDb = id;
-                Log.d(LOG_TAG, "trackPosInDb: " + trackPosInDb);
-                showPlayerDialog(trackPosInDb);
+                showPlayerDialog(id);
             }
         });
 
@@ -132,7 +130,7 @@ public class TopTracksActivityFragment extends Fragment {
                 } catch (NullPointerException e) {
 
                     // Error caused by trying to get artist id and name.
-                    Log.d(LOG_TAG, "onCreateView: " + e.getMessage());
+                    e.printStackTrace();
 
                     Utils.displayToast(getActivity(),
                             R.string.error_invalid_artist_id_or_name,
@@ -163,6 +161,10 @@ public class TopTracksActivityFragment extends Fragment {
     public class SearchTopTracksTask extends AsyncTask<String, Void, List<SpotifyTrack>> {
         //private final String LOG_TAG = SearchTopTracksTask.class.getSimpleName();
         private boolean failedToFetchData = false;
+
+        // Display the progress dialog to inform the user that the search is running.
+        private ProgressDialog mProgressDialog =
+                ProgressDialog.show(getActivity(), "", "Searching top tracks...");
 
         @Override
         protected List<SpotifyTrack> doInBackground(String... params) {
@@ -226,6 +228,12 @@ public class TopTracksActivityFragment extends Fragment {
 
             if (getActivity() != null) {
 
+                // Dismiss the progress dialog when the searching task is done.
+                if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                    mProgressDialog = null;
+                }
+
                 mTrackAdapter.clear();
 
                 // Update top tracks.
@@ -253,7 +261,6 @@ public class TopTracksActivityFragment extends Fragment {
                     TopTracksContract.TopTracksEntry.TABLE_NAME
             );
 
-            Log.d(LOG_TAG, "Total has " + rowsDeleted + " records deleted from table.");
 
             int count = tracks.size();
 
@@ -276,8 +283,6 @@ public class TopTracksActivityFragment extends Fragment {
                         TopTracksContract.TopTracksEntry.CONTENT_URI,
                         values
                 );
-
-                Log.d(LOG_TAG, "Total has " + numInserted + " records inserted into table");
             }
         }
     }

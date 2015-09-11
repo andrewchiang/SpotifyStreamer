@@ -1,6 +1,7 @@
 package com.example.android.spotifystreamer;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,7 +31,6 @@ public class SearchArtistActivityFragment extends Fragment {
 
     public static final String LOG_TAG = SearchArtistActivityFragment.class.getSimpleName();
     private ArtistAdapter mArtistAdapter;
-
 
     /**
      * SearchArtistActivity must implement this interface in order to handle the event.
@@ -142,6 +142,10 @@ public class SearchArtistActivityFragment extends Fragment {
         //private final String LOG_TAG = SearchArtistTask.class.getSimpleName();
         private boolean failedToFetchData = false;
 
+        // Display the progress dialog to inform the user that the search is running.
+        private ProgressDialog mProgressDialog =
+                ProgressDialog.show(getActivity(), "", "Searching artist...");
+
         @Override
         protected List<SpotifyArtist> doInBackground(String... params) {
             List<SpotifyArtist> spotifyArtists = null;
@@ -183,6 +187,12 @@ public class SearchArtistActivityFragment extends Fragment {
         protected void onPostExecute(List<SpotifyArtist> spotifyArtists) {
 
             if (getActivity() != null) {
+
+                // Dismiss the progress dialog after the searching task is done.
+                if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                    mProgressDialog = null;
+                }
 
                 mArtistAdapter.clear();
 
